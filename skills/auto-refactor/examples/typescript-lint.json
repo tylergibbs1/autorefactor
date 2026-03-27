@@ -1,0 +1,18 @@
+{
+  "tag": "lint-cleanup",
+  "target_files": ["src/**/*.ts", "src/**/*.tsx"],
+  "exclude_files": ["**/*.test.*", "**/*.spec.*", "**/__tests__/**", "**/node_modules/**", "**/dist/**"],
+  "test_command": "npm test -- --watchAll=false",
+  "metric_command": "npx eslint src/ --format json 2>/dev/null | jq '[.[].messages | length] | add // 0'",
+  "metric_name": "eslint_warnings",
+  "metric_direction": "lower",
+  "secondary_metrics": [
+    {
+      "name": "test_count",
+      "command": "npm test -- --watchAll=false 2>&1 | grep -oP '\\d+(?= passed)' || echo 0"
+    }
+  ],
+  "timeout_seconds": 300,
+  "max_files_per_iteration": 1,
+  "strategies": ["fix-lint-warnings", "remove-dead-code", "improve-naming"]
+}

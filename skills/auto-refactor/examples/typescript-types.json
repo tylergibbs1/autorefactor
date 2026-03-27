@@ -1,0 +1,18 @@
+{
+  "tag": "type-safety",
+  "target_files": ["src/**/*.ts", "src/**/*.tsx"],
+  "exclude_files": ["**/*.test.*", "**/*.spec.*", "**/*.d.ts", "**/node_modules/**"],
+  "test_command": "npm test -- --watchAll=false",
+  "metric_command": "npx tsc --noEmit 2>&1 | grep 'error TS' | wc -l",
+  "metric_name": "type_errors",
+  "metric_direction": "lower",
+  "secondary_metrics": [
+    {
+      "name": "any_count",
+      "command": "grep -r '\\bany\\b' src/ --include='*.ts' --include='*.tsx' -l | wc -l"
+    }
+  ],
+  "timeout_seconds": 300,
+  "max_files_per_iteration": 1,
+  "strategies": ["fix-lint-warnings", "improve-naming", "reduce-complexity"]
+}

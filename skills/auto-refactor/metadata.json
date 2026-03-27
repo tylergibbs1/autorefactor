@@ -1,0 +1,10 @@
+{
+  "version": "1.0.0",
+  "organization": "tylergibbs",
+  "date": "March 2026",
+  "abstract": "Autonomous code refactoring loop for Claude Code. Point it at a codebase, define quality metrics (test coverage, cyclomatic complexity, bundle size, type safety, lint warnings), and let it loop indefinitely. Each iteration picks a file, refactors it, runs the test suite, checks if the metric improved, and keeps or reverts the change.",
+  "references": [
+    "https://github.com/karpathy/autoresearch",
+    "https://github.com/tylergibbs1/autoresearchskill"
+  ]
+}

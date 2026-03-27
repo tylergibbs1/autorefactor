@@ -1,0 +1,18 @@
+{
+  "tag": "coverage-boost",
+  "target_files": ["src/**/*.py", "app/**/*.py"],
+  "exclude_files": ["**/test_*.py", "**/tests/**", "**/__pycache__/**", "**/migrations/**"],
+  "test_command": "pytest --tb=short -q",
+  "metric_command": "pytest --cov=src --cov-report=json -q 2>/dev/null && jq '.totals.percent_covered' coverage.json",
+  "metric_name": "line_coverage_pct",
+  "metric_direction": "higher",
+  "secondary_metrics": [
+    {
+      "name": "ruff_warnings",
+      "command": "ruff check src/ 2>&1 | tail -1 | grep -oP '\\d+' | head -1 || echo 0"
+    }
+  ],
+  "timeout_seconds": 600,
+  "max_files_per_iteration": 1,
+  "strategies": ["extract-functions", "reduce-complexity", "simplify-conditionals"]
+}
