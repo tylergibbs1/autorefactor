@@ -7,7 +7,7 @@ Inspired by [Karpathy's autoresearch](https://github.com/karpathy/autoresearch) 
 ## Install
 
 ```bash
-npx skills add <your-username>/autorefactor
+npx skills add tylergibbs1/autorefactor
 ```
 
 Or install manually:
