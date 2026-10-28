@@ -13,24 +13,41 @@ npx skills add tylergibbs1/autorefactor
 Or install manually:
 
 ```bash
-cp -r skills/auto-refactor ~/.claude/skills/auto-refactor
+git clone https://github.com/tylergibbs1/autorefactor.git
+cp -r autorefactor/skills/auto-refactor ~/.claude/skills/auto-refactor
 ```
 
 ## Usage
 
-Just run the skill — no config needed:
+Just run the skill (its name is `auto-refactoring`) — no config needed:
 
 ```
-/auto-refactor
+/auto-refactoring
 ```
+
+Or ask in plain words, e.g. "auto-refactor this repo" or "reduce complexity in src/".
 
 The agent explores your project, asks what metric you want to optimize, writes a `refactor.json` config, then loops indefinitely — trying refactorings, keeping improvements, discarding failures. Leave it running and come back to a cleaner codebase.
 
 If you already have a `refactor.json`, it skips straight to the loop.
 
+## How It Works
+
+Each iteration of the loop:
+
+1. **Pick** a target file, preferring the worst per-file metric, and choose a strategy.
+2. **Edit**: one conservative, behavior-preserving change.
+3. **Test**: run `test_command`. Failure → revert.
+4. **Measure**: run `metric_command`. Regression → revert.
+5. **Commit** kept changes on the `autorefactor/<tag>` branch, then log every attempt to `results.tsv`.
+
+The full loop lives in [SKILL.md](skills/auto-refactor/SKILL.md).
+
+Every change either improves the codebase or gets thrown away. Tests must pass. The metric must not regress. No exceptions.
+
 ## Configuration
 
-The agent writes this for you, but here's the format:
+The agent writes this for you, but here's the format (full field reference and metric commands in [CONFIG.md](skills/auto-refactor/CONFIG.md)):
 
 ```json
 {
@@ -75,12 +92,10 @@ See `skills/auto-refactor/examples/` for more:
 - **simplify-conditionals** — Clean up boolean logic, consolidate checks
 - **reduce-duplication** — Extract shared patterns (only when 3+ instances exist)
 
+Details and what to do when stuck: [STRATEGIES.md](skills/auto-refactor/STRATEGIES.md).
+
 ## Output
 
 - **Git history** on `autorefactor/<tag>` — each improvement is a commit with context
 - **results.tsv** — full experiment log (iteration, file, strategy, metric before/after, kept/reverted)
 - **run.log** — most recent test output
-
-## The Contract
-
-Every change either improves the codebase or gets thrown away. Tests must pass. The metric must not regress. No exceptions.
